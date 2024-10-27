@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temperature Trends for {{ city }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #555;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <h1>{{ city }} Temperature Trends (Last Week)</h1>
+    <img src="data:image/png;base64,{{ plot_url }}" alt="Temperature Trends">
+
+    <div class="historical-stats">
+        <h3>Historical Statistics for {{ city }}</h3>
+        <table>
+            <tr>
+                <th>Average Temperature</th>
+                <td>{{ historical_stats.average_temp or "Data not available" }}°C</td>
+            </tr>
+            <tr>
+                <th>Maximum Temperature</th>
+                <td>{{ historical_stats.temp_max or "Data not available" }}°C</td>
+            <tr>
+                <th>Minimum Temperature</th>
+                <td>{{ historical_stats.average_temp or "Data not available" }}°C</td>
+            </tr>
+        </table>
+    </div>
+    
+    </div>
+    
+</body>
+</html>

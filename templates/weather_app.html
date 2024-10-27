@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        h1, h2, h3 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .table {
+            margin: 20px auto;
+            width: 100%;
+            max-width: 800px; /* Center the table */
+        }
+        .threshold-input {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .threshold-input input {
+            width: 50%;
+        }
+        .btn-custom {
+            background-color: #007bff;
+            color: white;
+        }
+        .btn-custom:hover {
+            background-color: #0056b3;
+        }
+        .prediction-row {
+            text-align: center;
+        }
+        .alert {
+            margin-top: 20px;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        a {
+            text-align:center;
+            display:block;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container fade-in">
+    <h1>Weather Forecast</h1>
+    <form method="GET" class="text-center">
+        <select name="city" onchange="this.form.submit()">
+            {% for city in cities %}
+            <option value="{{ city }}" {% if city == selected_city %}selected{% endif %}>{{ city }}</option>
+            {% endfor %}
+        </select>
+        <div class="threshold-input">
+            <label for="threshold">Set Temperature Threshold:</label>
+            <input type="number" name="threshold" id="threshold" placeholder="Enter threshold" required>
+            <button type="submit" class="btn btn-custom">Submit</button>
+        </div>
+    </form>
+
+    <!-- Dropdown for temperature units -->
+    <label for="unit">Select Temperature Unit:</label>
+    <select id="unit" name="unit" onchange="updateTemperature()">
+        <option value="celsius">Celsius (°C)</option>
+        <option value="fahrenheit">Fahrenheit (°F)</option>
+        <option value="kelvin">Kelvin (K)</option>
+    </select>
+
+    
+
+    <h2>Current Weather in {{ selected_city }}</h2>
+    <table class="table table-bordered">
+        <tr>
+            <th>Temperature</th>
+            <th>Feels Like</th>
+            <th>Humidity</th>
+            <th>Wind Speed</th>
+            <th>Condition</th>
+        </tr>
+        <tr>
+            <td>{{ weather_data.temp }} °C</td>
+            <td>{{ weather_data.feels_like }} °C</td>
+            <td>{{ weather_data.humidity }} %</td>
+            <td>{{ weather_data.wind_speed }} m/s</td>
+            <td>{{ weather_data.condition }}</td>
+        </tr>
+    </table>
+
+    <h3>Predicted Weather in {{ selected_city }}</h3>
+    <table class="table table-bordered">
+        <tr>
+            <th>Date</th>
+            <th>Temperature</th>
+            <th>Feels Like</th>
+        </tr>
+        {% for date, forecast in predictions.items() %}
+        <tr class="prediction-row">
+            <td>{{ date }}</td>
+            <td>{{ forecast.temp }} °C</td>
+            <td>{{ forecast.feels_like }} °C</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Temperature Trends</h2>
+    <div>
+        <a href="{{ url_for('visualize_weather', city=selected_city, view='7days') }}">View Historical Graph</a>
+    </div>
+
+
+    {% if alert_message %}
+    <div class="alert alert-warning">{{ alert_message }}</div>
+    {% endif %}
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    // Store original temperatures in Celsius
+    const originalTemp = (weather_data.temperature);
+    const originalFeelsLike = (weather_data.feels_like);
+
+    function convertTemperature(value, unit) {
+        if (unit === "fahrenheit") {
+            return (value * 9/5) + 32;
+        } else if (unit === "kelvin") {
+            return value + 273.15;
+        }
+        return value;  // default is Celsius
+    }
+
+    function updateTemperature() {
+        const unit = document.getElementById("unit").value;
+
+        // Convert temperatures based on selected unit
+        const temp = convertTemperature(originalTemp, unit);
+        const feelsLike = convertTemperature(originalFeelsLike, unit);
+
+        // Update the displayed values with units
+        document.getElementById("temperature").innerText = temp.toFixed(2) + (unit === "kelvin" ? " K" : unit === "fahrenheit" ? " °F" : " °C");
+        document.getElementById("feels_like").innerText = feelsLike.toFixed(2) + (unit === "kelvin" ? " K" : unit === "fahrenheit" ? " °F" : " °C");
+    }
+</script>
+</body>
+</html>
