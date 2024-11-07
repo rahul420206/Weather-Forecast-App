@@ -5,7 +5,7 @@ DB_NAME = 'weather_data.db'
 
 import requests
 
-API_KEY = 'go_to_readme_file'
+API_KEY = '6f2ea8041e662e9c17ba44dba05833d2'
 BASE_URL = 'https://api.openweathermap.org/data/2.5/weather'
 FORECAST_URL = 'http://api.openweathermap.org/data/2.5/forecast'
 CITIES = ['Delhi', 'Mumbai', 'Chennai', 'Bangalore', 'Kolkata', 'Hyderabad']
