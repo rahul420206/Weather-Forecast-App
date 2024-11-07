@@ -21,7 +21,7 @@ app = Flask(__name__)
 initialize_database()
 
 # OpenWeatherMap API settings
-API_KEY = 'go_to_readme_file'
+API_KEY = '6f2ea8041e662e9c17ba44dba05833d2'
 UPDATE_INTERVAL = 300
 CITIES = ['Delhi', 'Mumbai', 'Chennai', 'Bangalore', 'Kolkata', 'Hyderabad']
 BASE_URL = 'https://api.openweathermap.org/data/2.5/weather'
